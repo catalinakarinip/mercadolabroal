@@ -62,6 +62,8 @@ def construir_panel():
         return
     panel = panel.sort_values(ID_VARS).reset_index(drop=True)
     PANEL_FILE.parent.mkdir(parents=True, exist_ok=True)
+    if PANEL_FILE.exists():
+        print(f"↻  Reemplazando {PANEL_FILE.name}")
     panel.to_excel(PANEL_FILE, index=False)
     print("✅ Panel construido y guardado en:", PANEL_FILE)
 

@@ -100,10 +100,10 @@ def procesar_archivos():
     for src in ORIG_DIR.glob("*.xlsx"):
         base_alias = src.stem.split("_")[0].lower()
         dest = CLEAN_DIR / f"{base_alias}_limpia.xlsx"
-        if dest.exists() and dest.stat().st_mtime >= src.stat().st_mtime:
-            print(f"↻  Ya limpio: {dest.name}")
-            continue
-        print(f"→ Procesando {src.name} (base={base_alias})")
+        if dest.exists():
+            print(f"↻  Reemplazando {dest.name}")
+        else:
+            print(f"→ Procesando {src.name} (base={base_alias})")
         xls = pd.ExcelFile(src)
         with pd.ExcelWriter(dest, engine="openpyxl") as xlw:
             hojas_guardadas = 0
