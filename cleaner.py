@@ -20,10 +20,7 @@ def load_abbreviations() -> dict:
         .dropna()
     )
     df_map["base"] = (
-        df_map["base"]
-        .str.strip()
-        .str.replace(".xlsx", "", regex=False)
-        .str.lower()
+        df_map["base"].str.strip().str.replace(".xlsx", "", regex=False).str.lower()
     )
     df_map["var_original"] = df_map["var_original"].str.strip()
     df_map["abreviatura"] = df_map["abreviatura"].str.strip()
