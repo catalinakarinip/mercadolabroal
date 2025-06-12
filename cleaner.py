@@ -89,6 +89,26 @@ def limpiar_hoja(df: pd.DataFrame, base_alias: str, abbr: dict) -> pd.DataFrame:
     df = df.drop(columns=columnas_a_borrar, errors="ignore").rename(columns=renombres)
     df = df[df[ID_VARS[0]].notna() | df[ID_VARS[1]].notna()].reset_index(drop=True)
 
+    # Normalize quarter names so they match TRIM_OK in unify_panel.py
+    quarter_map = {
+        "1": "Ene - Mar",
+        "2": "Abr - Jun",
+        "3": "Jul - Sep",
+        "4": "Oct - Dic",
+        "ene-mar": "Ene - Mar",
+        "abr-jun": "Abr - Jun",
+        "jul-sep": "Jul - Sep",
+        "oct-dic": "Oct - Dic",
+        "ene - mar": "Ene - Mar",
+        "abr - jun": "Abr - Jun",
+        "jul - sep": "Jul - Sep",
+        "oct - dic": "Oct - Dic",
+    }
+    df["Trimestre"] = (
+        df["Trimestre"].astype(str).str.strip().str.lower().replace(quarter_map)
+    )
+    df["Año"] = pd.to_numeric(df["Año"], errors="coerce")
+
     for col in renombres.values():
         df[col] = df[col].apply(texto_a_numero)
 
