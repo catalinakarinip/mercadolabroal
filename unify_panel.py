@@ -61,7 +61,14 @@ def construir_panel():
     if panel is None:
         print("No se encontraron archivos limpios")
         return
-    panel = panel.sort_values(ID_VARS).reset_index(drop=True)
+    panel["Trimestre_num"] = panel["Trimestre"].map(TRIM_MAP)
+    panel = (
+        panel.sort_values(
+            ["Año", "Trimestre_num", "region_code", "region_name"]
+        )
+        .drop(columns="Trimestre_num")
+        .reset_index(drop=True)
+    )
     panel["Periodo"] = pd.PeriodIndex(
         year=panel["Año"],
         quarter=panel["Trimestre"].map(TRIM_MAP),
