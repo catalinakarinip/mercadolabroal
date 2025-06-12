@@ -29,6 +29,7 @@ MAPA = {
 }
 REGIONES = set(MAPA.keys())
 ID_VARS = ["Año", "Trimestre", "region_code", "region_name"]
+TRIM_MAP = {"Ene - Mar": 1, "Abr - Jun": 2, "Jul - Sep": 3, "Oct - Dic": 4}
 
 
 def cargar_base(path: Path) -> pd.DataFrame:
@@ -61,6 +62,12 @@ def construir_panel():
         print("No se encontraron archivos limpios")
         return
     panel = panel.sort_values(ID_VARS).reset_index(drop=True)
+    panel["Periodo"] = pd.PeriodIndex(
+        year=panel["Año"],
+        quarter=panel["Trimestre"].map(TRIM_MAP),
+        freq="Q",
+    )
+    panel["Fecha"] = panel["Periodo"].dt.start_time
     PANEL_FILE.parent.mkdir(parents=True, exist_ok=True)
     if PANEL_FILE.exists():
         print(f"↻  Reemplazando {PANEL_FILE.name}")
